@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Reading Room — Circulation Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #eadfc2;
+    --paper-deep: #e2d5b3;
+    --panel: #f8f2e2;
+    --ink: #2a2118;
+    --ink-soft: #5a4e3d;
+    --maroon: #7a2e2e;
+    --maroon-deep: #5e2222;
+    --brass: #a6822f;
+    --forest: #33473d;
+    --forest-deep: #253530;
+    --rule: #c9bc98;
+    --error: #9c3b2c;
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(255,255,255,0.25), transparent 45%),
+      radial-gradient(circle at 85% 80%, rgba(0,0,0,0.04), transparent 50%);
+    color: var(--ink);
+    font-family: var(--font-body);
+    min-height: 100vh;
+  }
+
+  /* ---------- Header / plaque ---------- */
+  .plaque {
+    background: linear-gradient(180deg, var(--forest) 0%, var(--forest-deep) 100%);
+    color: #ece4cf;
+    padding: 22px 32px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 4px solid var(--brass);
+  }
+  .plaque .wordmark {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .plaque .wordmark span {
+    color: #d8c98a;
+    font-weight: 400;
+    font-style: italic;
+  }
+  .plaque .session {
+    font-size: 14px;
+    color: #cfc4a4;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .plaque .session button {
+    background: transparent;
+    border: 1px solid #7f8f80;
+    color: #ece4cf;
+    padding: 6px 14px;
+    border-radius: 3px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .plaque .session button:hover { background: rgba(255,255,255,0.08); }
+
+  /* ---------- Layout shell ---------- */
+  .shell {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 36px 24px 80px;
+  }
+
+  /* ---------- Tabs (drawer labels) ---------- */
+  .drawer-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 0;
+    padding-left: 4px;
+  }
+  .drawer-tabs button {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink-soft);
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    border-bottom: none;
+    padding: 10px 20px;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    position: relative;
+    top: 1px;
+  }
+  .drawer-tabs button.active {
+    background: var(--panel);
+    color: var(--maroon-deep);
+    border-color: var(--rule);
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 0 8px 8px 8px;
+    padding: 32px;
+    box-shadow: 0 2px 0 rgba(42,33,24,0.04);
+  }
+
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 600; margin: 0 0 6px; color: var(--ink); }
+  h2 { font-size: 22px; }
+  h3 { font-size: 17px; }
+  p.lede { color: var(--ink-soft); font-size: 14px; margin: 0 0 24px; }
+
+  /* ---------- Login card ---------- */
+  .card-scene {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 90px);
+    padding: 40px 20px;
+  }
+  .library-card {
+    width: 380px;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 36px 34px 30px;
+    position: relative;
+    box-shadow: 0 12px 28px rgba(42,33,24,0.12);
+  }
+  .library-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 28px;
+    width: 64px; height: 14px;
+    background: var(--brass);
+    border-radius: 0 0 4px 4px;
+  }
+  .library-card h2 { margin-top: 10px; }
+  .library-card .toggle-row {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 22px;
+    background: var(--paper-deep);
+    border-radius: 6px;
+    padding: 4px;
+  }
+  .library-card .toggle-row button {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .library-card .toggle-row button.active {
+    background: var(--panel);
+    color: var(--maroon-deep);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin: 14px 0 5px;
+  }
+  input, select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    background: #fffdf7;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--ink);
+  }
+  input:focus, select:focus, button:focus-visible {
+    outline: 2px solid var(--brass);
+    outline-offset: 1px;
+  }
+
+  .btn {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+  }
+  .btn-primary { background: var(--maroon); color: #f7ede4; }
+  .btn-primary:hover { background: var(--maroon-deep); }
+  .btn-ghost { background: transparent; color: var(--maroon); border: 1px solid var(--maroon); }
+  .btn-ghost:hover { background: rgba(122,46,46,0.06); }
+  .btn-small { padding: 6px 12px; font-size: 12.5px; }
+  .btn-block { width: 100%; margin-top: 20px; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .banner {
+    padding: 10px 14px;
+    border-radius: 5px;
+    font-size: 13.5px;
+    margin-bottom: 16px;
+  }
+  .banner-error { background: #f4e2dc; color: var(--error); border: 1px solid #e0b6a8; }
+  .banner-ok { background: #e4ebe1; color: var(--forest-deep); border: 1px solid #b9cdb2; }
+
+  /* ---------- Book index cards ---------- */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 16px;
+    margin-top: 8px;
+  }
+  .book-card {
+    background: #fffdf7;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 16px 16px 14px;
+    position: relative;
+  }
+  .book-card .tab {
+    position: absolute;
+    top: -9px; left: 14px;
+    background: var(--brass);
+    color: #2a2118;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.2px;
+  }
+  .book-card .tab.out { background: #b7a889; }
+  .book-card h3 { margin: 8px 0 2px; font-size: 16px; line-height: 1.3; }
+  .book-card .author { font-size: 13px; color: var(--ink-soft); margin-bottom: 10px; }
+  .book-card .meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    border-top: 1px dashed var(--rule);
+    padding-top: 8px;
+    margin-bottom: 10px;
+  }
+  .book-card .actions { display: flex; gap: 8px; }
+
+  /* ---------- Forms ---------- */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 20px;
+  }
+  .form-grid .full { grid-column: 1 / -1; }
+
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: flex-end;
+  }
+  .toolbar > div { flex: 1; }
+  .toolbar label { margin-top: 0; }
+
+  /* ---------- Tables ---------- */
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--rule); }
+  th { color: var(--ink-soft); font-weight: 600; font-size: 12.5px; }
+  tr:last-child td { border-bottom: none; }
+
+  .stat-row { display: flex; gap: 14px; margin-bottom: 26px; flex-wrap: wrap; }
+  .stat {
+    background: #fffdf7;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 14px 20px;
+    min-width: 130px;
+  }
+  .stat .num { font-family: var(--font-display); font-size: 28px; font-weight: 600; color: var(--maroon-deep); }
+  .stat .label { font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+
+  .section-gap { margin-top: 34px; }
+  .hidden { display: none !important; }
+
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .plaque { flex-direction: column; align-items: flex-start; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="plaque">
+  <div class="wordmark">The Reading Room <span>· circulation desk</span></div>
+  <div class="session" id="sessionBar"></div>
+</div>
+
+<div id="app"></div>
+
+<script>
+const API = 'http://localhost:8080/api';
+
+let state = {
+  user: null,        // { userId, name, username, role, outstandingFine }
+  view: 'catalog',    // catalog | add | reports | mybooks
+  books: [],
+  banner: null,       // { type: 'error'|'ok', text }
+};
+
+// ---------- API helpers ----------
+async function api(path, options = {}) {
+  const res = await fetch(API + path, {
+    headers: { 'Content-Type': 'application/json' },
+    ...options,
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(data.error || 'Something went wrong. Please try again.');
+  }
+  return data;
+}
+
+let bannerTimer = null;
+
+function updateBannerSlot() {
+  const slot = document.getElementById('bannerSlot');
+  if (!slot) return;
+  slot.innerHTML = bannerHtml();
+}
+
+function setBanner(type, text) {
+  state.banner = { type, text };
+  updateBannerSlot();
+  clearTimeout(bannerTimer);
+  bannerTimer = setTimeout(() => {
+    state.banner = null;
+    updateBannerSlot();
+  }, 4500);
+}
+
+// ---------- Auth screens ----------
+function renderAuth() {
+  const app = document.getElementById('app');
+  const mode = state.authMode || 'login';
+  app.innerHTML = `
+    <div class="card-scene">
+      <div class="library-card">
+        <div class="toggle-row">
+          <button id="toLogin" class="${mode === 'login' ? 'active' : ''}">Log in</button>
+          <button id="toRegister" class="${mode === 'register' ? 'active' : ''}">Join the library</button>
+        </div>
+        <h2>${mode === 'login' ? 'Welcome back' : 'New membership card'}</h2>
+        <p class="lede">${mode === 'login'
+          ? 'Enter your desk credentials to open the circulation menu.'
+          : 'Register as a librarian or a member to start using the desk.'}</p>
+        <div id="bannerSlot">${bannerHtml()}</div>
+        <form id="authForm">
+          ${mode === 'register' ? `
+            <label>I am a</label>
+            <select id="role">
+              <option value="MEMBER">Member (borrow books)</option>
+              <option value="LIBRARIAN">Librarian (manage catalog)</option>
+            </select>
+            <label>Full name</label>
+            <input id="name" type="text" placeholder="Jane Doe" required />
+          ` : ''}
+          <label>Username</label>
+          <input id="username" type="text" placeholder="jane" required />
+          <label>Password</label>
+          <input id="password" type="password" placeholder="••••••••" required />
+          <button type="submit" class="btn btn-primary btn-block">
+            ${mode === 'login' ? 'Log in' : 'Create account'}
+          </button>
+        </form>
+        ${mode === 'login' ? '<p class="lede" style="margin-top:16px;">Default desk login: <strong>admin</strong> / <strong>admin123</strong></p>' : ''}
+      </div>
+    </div>
+  `;
+
+  document.getElementById('toLogin').onclick = () => { state.authMode = 'login'; state.banner = null; render(); };
+  document.getElementById('toRegister').onclick = () => { state.authMode = 'register'; state.banner = null; render(); };
+  document.getElementById('authForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    try {
+      if (mode === 'login') {
+        const user = await api('/login', { method: 'POST', body: JSON.stringify({ username, password }) });
+        state.user = user;
+        state.view = user.role === 'LIBRARIAN' ? 'catalog' : 'catalog';
+        await loadBooks();
+        render();
+      } else {
+        const role = document.getElementById('role').value;
+        const name = document.getElementById('name').value.trim();
+        await api('/register', { method: 'POST', body: JSON.stringify({ role, name, username, password }) });
+        setBanner('ok', 'Account created. You can log in now.');
+        state.authMode = 'login';
+        render();
+      }
+    } catch (err) {
+      setBanner('error', err.message);
+    }
+  };
+}
+
+function bannerHtml() {
+  if (!state.banner) return '';
+  return `<div class="banner banner-${state.banner.type === 'error' ? 'error' : 'ok'}">${state.banner.text}</div>`;
+}
+
+// ---------- Data loading ----------
+async function loadBooks() {
+  state.books = await api('/books');
+}
+
+async function refreshMember() {
+  if (state.user && state.user.role === 'MEMBER') {
+    const m = await api('/member/' + state.user.userId);
+    state.memberDetail = m;
+    state.user.outstandingFine = m.outstandingFine;
+  }
+}
+
+// ---------- Main app shell ----------
+function renderSessionBar() {
+  const bar = document.getElementById('sessionBar');
+  if (!state.user) { bar.innerHTML = ''; return; }
+  bar.innerHTML = `
+    <span>${state.user.name} · ${state.user.role === 'LIBRARIAN' ? 'Librarian' : 'Member'}</span>
+    <button id="logoutBtn">Log out</button>
+  `;
+  document.getElementById('logoutBtn').onclick = () => {
+    state.user = null;
+    state.view = 'catalog';
+    render();
+  };
+}
+
+function tabsFor(role) {
+  if (role === 'LIBRARIAN') {
+    return [
+      ['catalog', 'Catalog'],
+      ['add', 'Add a book'],
+      ['reports', 'Reports'],
+    ];
+  }
+  return [
+    ['catalog', 'Borrow books'],
+    ['mybooks', 'My books'],
+  ];
+}
+
+async function render() {
+  renderSessionBar();
+  const app = document.getElementById('app');
+
+  if (!state.user) {
+    renderAuth();
+    return;
+  }
+
+  const tabs = tabsFor(state.user.role);
+  app.innerHTML = `
+    <div class="shell">
+      <div class="drawer-tabs">
+        ${tabs.map(([key, label]) => `<button data-tab="${key}" class="${state.view === key ? 'active' : ''}">${label}</button>`).join('')}
+      </div>
+      <div class="panel" id="panelBody"></div>
+    </div>
+  `;
+
+  tabs.forEach(([key]) => {
+    document.querySelector(`[data-tab="${key}"]`).onclick = async () => {
+      state.view = key;
+      state.banner = null;
+      await renderPanel();
+    };
+  });
+
+  await renderPanel();
+}
+
+async function renderPanel() {
+  document.querySelectorAll('[data-tab]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === state.view);
+  });
+  const panel = document.getElementById('panelBody');
+
+  if (state.view === 'catalog') {
+    await loadBooks();
+    panel.innerHTML = renderCatalog();
+    wireCatalog();
+  } else if (state.view === 'add') {
+    panel.innerHTML = renderAddBook();
+    wireAddBook();
+  } else if (state.view === 'reports') {
+    panel.innerHTML = '<h2>Reports</h2><p class="lede">Loading…</p>';
+    await renderReports(panel);
+  } else if (state.view === 'mybooks') {
+    await refreshMember();
+    panel.innerHTML = renderMyBooks();
+    wireMyBooks();
+  }
+}
+
+// ---------- Catalog ----------
+function renderCatalog() {
+  const isLibrarian = state.user.role === 'LIBRARIAN';
+  return `
+    <h2>${isLibrarian ? 'The catalog' : 'Find a book'}</h2>
+    <p class="lede">${isLibrarian ? 'Every title currently on the shelves.' : 'Search the shelves, then borrow anything with a copy free.'}</p>
+    <div id="bannerSlot">${bannerHtml()}</div>
+    <div class="toolbar">
+      <div>
+        <label>Search by</label>
+        <select id="searchType">
+          <option value="title">Title</option>
+          <option value="author">Author</option>
+          <option value="genre">Genre</option>
+        </select>
+      </div>
+      <div style="flex:2">
+        <label>Term</label>
+        <input id="searchTerm" type="text" placeholder="e.g. Clean Code, Bloch, Software" />
+      </div>
+      <div style="flex:0">
+        <label>&nbsp;</label>
+        <button id="searchBtn" class="btn btn-ghost">Search</button>
+      </div>
+      <div style="flex:0">
+        <label>&nbsp;</label>
+        <button id="clearBtn" class="btn btn-ghost">Show all</button>
+      </div>
+    </div>
+    <div id="cardGridWrap"></div>
+  `;
+}
+
+function bookCardHtml(book, isLibrarian) {
+  const out = book.availableCopies === 0;
+  return `
+    <div class="book-card">
+      <span class="tab ${out ? 'out' : ''}">${out ? 'All checked out' : book.availableCopies + ' free'}</span>
+      <h3>${escapeHtml(book.title)}</h3>
+      <div class="author">${escapeHtml(book.author)}</div>
+      <div class="meta">
+        <span>${escapeHtml(book.genre)}</span>
+        <span>${book.availableCopies}/${book.totalCopies} copies</span>
+      </div>
+      <div class="actions">
+        ${isLibrarian
+          ? `<button class="btn btn-ghost btn-small" data-edit="${book.isbn}">Edit</button>
+             <button class="btn btn-ghost btn-small" data-delete="${book.isbn}">Remove</button>`
+          : `<button class="btn btn-primary btn-small" data-borrow="${book.isbn}" ${out ? 'disabled' : ''}>Borrow</button>`
+        }
+      </div>
+    </div>
+  `;
+}
+
+function renderCardGrid(books) {
+  const isLibrarian = state.user.role === 'LIBRARIAN';
+  if (books.length === 0) {
+    return `<div class="empty-state">No books match that search. Try a different term or show all.</div>`;
+  }
+  return `<div class="card-grid">${books.map(b => bookCardHtml(b, isLibrarian)).join('')}</div>`;
+}
+
+function wireCatalog() {
+  const wrap = document.getElementById('cardGridWrap');
+  wrap.innerHTML = renderCardGrid(state.books);
+  wireCardActions();
+
+  document.getElementById('searchBtn').onclick = async () => {
+    const type = document.getElementById('searchType').value;
+    const term = document.getElementById('searchTerm').value.trim();
+    if (!term) { wrap.innerHTML = renderCardGrid(state.books); wireCardActions(); return; }
+    const results = await api(`/books/search?type=${type}&term=${encodeURIComponent(term)}`);
+    wrap.innerHTML = renderCardGrid(results);
+    wireCardActions();
+  };
+  document.getElementById('clearBtn').onclick = async () => {
+    document.getElementById('searchTerm').value = '';
+    await loadBooks();
+    wrap.innerHTML = renderCardGrid(state.books);
+    wireCardActions();
+  };
+}
+
+function wireCardActions() {
+  document.querySelectorAll('[data-borrow]').forEach(btn => {
+    btn.onclick = async () => {
+      try {
+        const txn = await api('/borrow', { method: 'POST', body: JSON.stringify({ memberId: state.user.userId, isbn: btn.dataset.borrow }) });
+        setBanner('ok', `Borrowed. Due back ${txn.dueDate}.`);
+        await renderPanel();
+      } catch (err) {
+        setBanner('error', err.message);
+      }
+    };
+  });
+  document.querySelectorAll('[data-delete]').forEach(btn => {
+    btn.onclick = async () => {
+      if (!confirm('Remove this title from the catalog?')) return;
+      try {
+        await api('/books/' + btn.dataset.delete, { method: 'DELETE' });
+        setBanner('ok', 'Book removed.');
+        await renderPanel();
+      } catch (err) {
+        setBanner('error', err.message);
+      }
+    };
+  });
+  document.querySelectorAll('[data-edit]').forEach(btn => {
+    btn.onclick = async () => {
+      const book = state.books.find(b => b.isbn === btn.dataset.edit);
+      const title = prompt('Title', book.title);
+      if (title === null) return;
+      const author = prompt('Author', book.author);
+      if (author === null) return;
+      const genre = prompt('Genre', book.genre);
+      if (genre === null) return;
+      try {
+        await api('/books/' + book.isbn, { method: 'PUT', body: JSON.stringify({ title, author, genre }) });
+        setBanner('ok', 'Book updated.');
+        await renderPanel();
+      } catch (err) {
+        setBanner('error', err.message);
+      }
+    };
+  });
+}
+
+// ---------- Add book (librarian) ----------
+function renderAddBook() {
+  return `
+    <h2>Add a book to the shelves</h2>
+    <p class="lede">New titles appear in the catalog immediately.</p>
+    <div id="bannerSlot">${bannerHtml()}</div>
+    <form id="addBookForm">
+      <div class="form-grid">
+        <div>
+          <label>ISBN</label>
+          <input id="isbn" required />
+        </div>
+        <div>
+          <label>Total copies</label>
+          <input id="totalCopies" type="number" min="1" value="1" required />
+        </div>
+        <div class="full">
+          <label>Title</label>
+          <input id="title" required />
+        </div>
+        <div>
+          <label>Author</label>
+          <input id="author" required />
+        </div>
+        <div>
+          <label>Genre</label>
+          <input id="genre" required />
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" style="margin-top:20px;">Add to catalog</button>
+    </form>
+  `;
+}
+
+function wireAddBook() {
+  document.getElementById('addBookForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const payload = {
+      isbn: document.getElementById('isbn').value.trim(),
+      title: document.getElementById('title').value.trim(),
+      author: document.getElementById('author').value.trim(),
+      genre: document.getElementById('genre').value.trim(),
+      totalCopies: document.getElementById('totalCopies').value,
+    };
+    try {
+      await api('/books', { method: 'POST', body: JSON.stringify(payload) });
+      setBanner('ok', `"${payload.title}" added to the catalog.`);
+      state.view = 'catalog';
+      await renderPanel();
+    } catch (err) {
+      setBanner('error', err.message);
+    }
+  };
+}
+
+// ---------- Reports (librarian) ----------
+async function renderReports(panel) {
+  const [inventory, overdue, all] = await Promise.all([
+    api('/reports/inventory'),
+    api('/reports/overdue'),
+    api('/reports/transactions'),
+  ]);
+
+  panel.innerHTML = `
+    <h2>Reports</h2>
+    <p class="lede">A snapshot of the shelves and the ledger.</p>
+    <div id="bannerSlot">${bannerHtml()}</div>
+    <div class="stat-row">
+      <div class="stat"><div class="num">${inventory.distinctTitles}</div><div class="label">Distinct titles</div></div>
+      <div class="stat"><div class="num">${inventory.totalCopies}</div><div class="label">Total copies</div></div>
+      <div class="stat"><div class="num">${inventory.availableCopies}</div><div class="label">On the shelf</div></div>
+      <div class="stat"><div class="num">${inventory.onLoan}</div><div class="label">On loan</div></div>
+    </div>
+
+    <div class="section-gap">
+      <h3>Overdue (${overdue.length})</h3>
+      ${overdue.length === 0 ? '<div class="empty-state">Nothing overdue right now.</div>' : transactionTable(overdue)}
+    </div>
+
+    <div class="section-gap">
+      <h3>All transactions (${all.length})</h3>
+      ${all.length === 0 ? '<div class="empty-state">No transactions have been recorded yet.</div>' : transactionTable(all)}
+    </div>
+  `;
+}
+
+function transactionTable(txns) {
+  return `
+    <table>
+      <thead><tr><th>Transaction</th><th>Member</th><th>ISBN</th><th>Issued</th><th>Due</th><th>Returned</th><th>Status</th><th>Fine</th></tr></thead>
+      <tbody>
+        ${txns.map(t => `
+          <tr>
+            <td>${t.transactionId}</td>
+            <td>${t.memberId}</td>
+            <td>${t.isbn}</td>
+            <td>${t.issueDate}</td>
+            <td>${t.dueDate}</td>
+            <td>${t.returnDate || '—'}</td>
+            <td>${t.status}</td>
+            <td>${t.fineCharged.toFixed(2)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+// ---------- My books (member) ----------
+function renderMyBooks() {
+  const m = state.memberDetail;
+  const active = m.transactions.filter(t => t.status === 'ISSUED');
+  const history = m.transactions.filter(t => t.status === 'RETURNED');
+
+  return `
+    <h2>My books</h2>
+    <p class="lede">What you currently hold, and your borrowing history.</p>
+    <div id="bannerSlot">${bannerHtml()}</div>
+    <div class="stat-row">
+      <div class="stat"><div class="num">${active.length}</div><div class="label">Currently borrowed</div></div>
+      <div class="stat"><div class="num">${m.outstandingFine.toFixed(2)}</div><div class="label">Outstanding fine</div></div>
+    </div>
+
+    <h3>Currently borrowed</h3>
+    ${active.length === 0 ? '<div class="empty-state">You have nothing checked out.</div>' : `
+      <table>
+        <thead><tr><th>Transaction</th><th>ISBN</th><th>Due back</th><th></th></tr></thead>
+        <tbody>
+          ${active.map(t => `
+            <tr>
+              <td>${t.transactionId}</td>
+              <td>${t.isbn}</td>
+              <td>${t.dueDate}</td>
+              <td><button class="btn btn-ghost btn-small" data-return="${t.transactionId}">Return</button></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `}
+
+    <div class="section-gap">
+      <h3>History</h3>
+      ${history.length === 0 ? '<div class="empty-state">No past returns yet.</div>' : transactionTable(history)}
+    </div>
+  `;
+}
+
+function wireMyBooks() {
+  document.querySelectorAll('[data-return]').forEach(btn => {
+    btn.onclick = async () => {
+      try {
+        const result = await api('/return', { method: 'POST', body: JSON.stringify({ memberId: state.user.userId, transactionId: btn.dataset.return }) });
+        setBanner(result.fine > 0 ? 'error' : 'ok', result.fine > 0 ? `Returned late. Fine: ${result.fine.toFixed(2)}.` : 'Returned on time. No fine.');
+        await renderPanel();
+      } catch (err) {
+        setBanner('error', err.message);
+      }
+    };
+  });
+}
+
+// ---------- Utilities ----------
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ---------- Boot ----------
+render();
+</script>
+</body>
+</html>

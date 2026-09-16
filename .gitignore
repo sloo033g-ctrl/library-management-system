@@ -1,0 +1,18 @@
+# Compiled class files
+bin/
+*.class
+
+# Runtime data (regenerated automatically)
+data/*.dat
+data/application.log
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS
+.DS_Store
