@@ -207,6 +207,4 @@ Manual test scenarios to walk through:
 5. **Reports (as Librarian)**
    - View the Inventory Summary, Overdue Report, and All Transactions Report.
 
-## Screenshots
 
-_(Optional — add console screenshots here after running the application.)_
