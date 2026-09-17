@@ -1,4 +1,4 @@
-<img width="596" height="325" alt="Screenshot 2026-09-17 at 2 03 34 PM" src="https://github.com/user-attachments/assets/fd116d8c-130d-494f-84ad-7a1f273c8a2d" />
+
 
 
 # Library Management System
@@ -211,4 +211,12 @@ Manual test scenarios to walk through:
    - View the Inventory Summary, Overdue Report, and All Transactions Report.
 
 
+<img width="596" height="325" alt="Screenshot 2026-09-17 at 2 03 34 PM" src="https://github.com/user-attachments/assets/fd116d8c-130d-494f-84ad-7a1f273c8a2d" />
 <img width="595" height="315" alt="Screenshot 2026-09-17 at 2 03 50 PM" src="https://github.com/user-attachments/assets/8d2bfcac-6907-4b92-80f7-b675caabe723" />
+<img width="597" height="304" alt="Screenshot 2026-09-17 at 2 04 10 PM" src="https://github.com/user-attachments/assets/88558a63-ade8-437d-83e1-f28d22a6e3b0" />
+<img width="593" height="389" alt="Screenshot 2026-09-17 at 2 04 24 PM" src="https://github.com/user-attachments/assets/607b7ca1-775f-4424-8b7c-df47c376cade" />
+<img width="596" height="348" alt="Screenshot 2026-09-17 at 2 04 43 PM" src="https://github.com/user-attachments/assets/726684af-e23f-4f19-ba73-978abdf49f22" />
+<img width="597" height="347" alt="Screenshot 2026-09-17 at 2 04 55 PM" src="https://github.com/user-attachments/assets/f840e1ff-338c-4e35-a489-c316eac7a4f0" />
+
+
+
